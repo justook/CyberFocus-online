@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>新标签页</title>
+  <style>
+    /* CyberFocus 同款深色观感：加载和兜底设置页都是这个底 */
+    html, body { margin: 0; height: 100%; background: #0a0e14; color: #e8e8e8;
+                 font-family: system-ui, "Microsoft YaHei", sans-serif; }
+    body { display: flex; align-items: center; justify-content: center; }
+    .box { text-align: center; max-width: 520px; padding: 32px; }
+    .logo { font-size: 22px; letter-spacing: 2px; color: #00f2ea; margin-bottom: 8px; }
+    .hint { font-size: 13px; color: #9aa0a6; line-height: 1.7; }
+    input { width: 340px; max-width: 86vw; padding: 10px 14px; margin: 18px 0 12px;
+            background: #141a22; border: 1px solid #2a3440; border-radius: 8px;
+            color: #e8e8e8; font-size: 14px; outline: none; }
+    input:focus { border-color: rgba(0, 242, 234, 0.5); }
+    button { padding: 9px 26px; background: rgba(0, 242, 234, 0.12); color: #00f2ea;
+             border: 1px solid rgba(0, 242, 234, 0.4); border-radius: 8px;
+             font-size: 14px; cursor: pointer; }
+    button:hover { background: rgba(0, 242, 234, 0.22); }
+    .err { color: #ff6b6b; font-size: 12px; min-height: 18px; }
+    #setup { display: none; }
+  </style>
+</head>
+<body>
+  <!-- 已配置导航页地址时 JS 直接跳走，这个 DOM 只在未配置时可见 -->
+  <div class="box">
+    <div class="logo">CyberFocus</div>
+    <div id="status" class="hint">正在打开你的 CyberFocus 实例…</div>
+    <div id="setup">
+      <div class="hint">还没配置导航页地址。填一次，新标签页以后都直达：</div>
+      <input id="url" type="text" placeholder="默认 https://cyberfocus.justoky.xyz，或本地 index.html 路径">
+      <br>
+      <button id="save">保存并打开</button>
+      <div class="err" id="err"></div>
+      <div class="hint" style="margin-top:14px;">之后可在扩展弹窗里随时修改这个地址。</div>
+    </div>
+  </div>
+  <script src="newtab.js"></script>
+</body>
+</html>

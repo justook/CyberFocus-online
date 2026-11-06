@@ -1,0 +1,65 @@
+name: guard
+
+# 发布仓守卫：这个仓库只允许 README / docs / extension / LICENSE / CHANGELOG / workflows。
+# 主源码仓（闭源）的内容若混进来，直接 fail。触发于所有 push 与 PR。
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 禁入路径检查
+        run: |
+          echo "检查是否有闭源源码仓的目录混入发布仓..."
+          for p in app server tests tools deploy dist data node_modules \
+                   package.json package-lock.json vite.config.mjs \
+                   AGENTS.md PROJECT_ANALYSIS.md CONTRIBUTING.md \
+                   docs/arch-plan-v1.0.md docs/deploy-linux.md \
+                   docs/release-checklist.md docs/walkthrough-1.0.0.md; do
+            if [ -e "$p" ]; then
+              echo "::error::禁入路径存在：$p（发布仓不允许出现源码仓内容）"
+              FAIL=1
+            fi
+          done
+          [ "${FAIL:-0}" = "1" ] && exit 1
+          echo "OK：无禁入路径"
+
+      - name: 密钥与敏感信息扫描
+        run: |
+          echo "扫描密钥、内网地址、数据文件痕迹..."
+          HITS=$(grep -rInE \
+            'SESSION_SECRET|BEGIN (RSA|EC|OPENSSH|PRIVATE) KEY|postgres(ql)?://|mysql://|redis://|mongodb(\\\+srv)?://|sk-[A-Za-z0-9]{20,}' \
+            --exclude-dir=.git --exclude-dir=.github . || true)
+          # 注意 --exclude-dir=.github：本 workflow 自身包含这些关键词（黑名单字面量），排除后才能自洽
+          if [ -n "$HITS" ]; then
+            echo "::error::发现疑似敏感信息："
+            echo "$HITS"
+            exit 1
+          fi
+          echo "OK：无密钥痕迹"
+
+      - name: extension 版本与 tag 一致性
+        run: |
+          VER=$(node -p "require('./extension/manifest.json').version" 2>/dev/null || echo "")
+          if [ -z "$VER" ]; then
+            echo "::error::extension/manifest.json 不存在或无法解析"
+            exit 1
+          fi
+          LATEST_TAG=$(git describe --tags --match 'ext-v*' --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$LATEST_TAG" ]; then
+            TAG_VER="${LATEST_TAG#ext-v}"
+            if [ "$VER" != "$TAG_VER" ]; then
+              echo "::warning::manifest 版本 ($VER) 与最新 ext tag ($LATEST_TAG) 不一致——若正在发布新版本，请先打 tag"
+            else
+              echo "OK：manifest ($VER) 与 $LATEST_TAG 一致"
+            fi
+          else
+            echo "尚无 ext-v tag，跳过一致性检查（manifest 版本：$VER）"
+          fi

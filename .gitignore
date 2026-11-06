@@ -1,0 +1,16 @@
+# OS / 编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 发布产物只走 Release 附件，不进仓库
+*.zip
+*.tgz
+
+# 任何环境/数据文件都不该出现在这个仓库
+.env
+.env.*
+*.db
+*.db-wal
+*.db-shm
