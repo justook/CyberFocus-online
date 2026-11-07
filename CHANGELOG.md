@@ -1,29 +1,28 @@
-# Changelog
+# 更新日志
 
-本仓库的更新日志只记录**插件版本与文档变更**。Web 应用本体的迭代在本仓库不可见。
+所有值得注意的改动都记在这里。版本号与 [Releases](https://github.com/justook/CyberFocus-online/releases) 上的标签一一对应。
 
-格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号与 Release tag（`ext-v*`）一一对应。
+## [未发布]
 
-## [Unreleased]
-
-### 计划中
-
-- Edge 加载项商店上架评估
+- 评估上架 Edge 加载项商店，届时可免去手动加载
 
 ## [0.2.0] - 2026-11-06
 
-首个公开发布版本。插件此前一直随闭源仓库内部迭代，本版起在本仓库独立发布。
+第一个公开发布版本。
 
-### Added
+**新增**
 
-- 默认实例地址内置为官方站点（`https://cyberfocus.justoky.xyz`），安装后开箱即连；自托管用户可在弹窗中修改
-- 新标签页直达：浏览器新标签页自动打开配置的 CyberFocus 实例，未配置时显示引导页（地址与弹窗共用同一份配置）
-- 一键收藏投递失败（如未授权本地文件访问）时自动降级：复制 JSON 到剪贴板，在导航页管理面板粘贴导入
+- 装好即用：插件默认连上官方实例，不用再手动填地址；自己部署的实例可在弹窗里改
+- 新标签页直达：浏览器新标签页自动打开 CyberFocus，首次使用会先引导填地址
+- 收藏兜底：投递失败时自动把收藏信息复制到剪贴板，可以到导航页粘贴导入
 
-### Notes
+**说明**
 
-- `extension/` 源码即发布内容，无构建步骤
-- 投递协议：导航页接收 `#add=<base64url(JSON)>` hash 参数；不带预选分组的投递一律经人工确认弹窗保存，无静默写入路径
+- 收藏投递一律弹出确认框，选好分组和图标才保存，不会往你的导航页里静默塞内容
+- 插件源码就是发布内容，无构建步骤，可直接阅读
 
-[Unreleased]: https://github.com/justook/CyberFocus-online/compare/ext-v0.2.0...HEAD
-[0.2.0]: https://github.com/justook/CyberFocus-online/releases/tag/ext-v0.2.0
+## 版本对应关系
+
+| 插件版本 | 标签 | 下载 |
+|---|---|---|
+| 0.2.0 | `ext-v0.2.0` | [cyberfocus-ext-0.2.0.zip](https://github.com/justook/CyberFocus-online/releases/tag/ext-v0.2.0) |
